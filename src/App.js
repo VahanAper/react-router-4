@@ -2,17 +2,29 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  Link,
 } from 'react-router-dom';
+
+const Links = () => (
+  <nav>
+    <Link to="/?id=123">Inline</Link>
+    {/*<Link to={{ pathname: '/?456' }}>Object</Link>*/}
+    <Link to={{ pathname: '/', search: 'id=456' }}>Object</Link>
+  </nav>
+);
 
 const App = () => (
   <Router>
     <div>
+      <Links />
       <Route
-        path="/:a(\d{2}-\d{2}-\d{4}):b(\.[a-z]+)"
-        render={({ match }) => (
+        path="/"
+        render={({ match, location }) => (
           <div>
-            <h1>paramA: {match.params.a}</h1>
-            <h2>paramB: {match.params.b}</h2>
+            <p>root</p>
+            <p>{JSON.stringify(match)}</p>
+            <p>{JSON.stringify(location)}</p>
+            <p>{new URLSearchParams(location.search).get('id')}</p>
           </div>
         )}
       />
