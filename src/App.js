@@ -3,33 +3,54 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
+  Redirect,
+  // Switch,
 } from 'react-router-dom';
 
 import './App.css';
 
-const Home = () => (<h1>Home</h1>);
-const Menu = () => (
-  <div>
-    <h1>Menu</h1>
-    <Link to="/menu/food">Food</Link>
-    <Link to="/menu/drink">Drinks</Link>
-    <Link to="/menu/sides">Sides</Link>
-    <Route
-      path="/menu/:section"
-      render={({ match }) =>
-        <h2>{match.params.section}</h2>
-      }
-    />
-  </div>
-)
+const Links = () =>
+  <nav>
+    <Link to="/">Home</Link>
+    <Link to="/old-123">old</Link>
+    <Link to="/new-456">new</Link>
+    <Link to="/protected">Protected</Link>
+  </nav>
+
+// const loggedin = false;
+const loggedin = true;
 
 const App = (props) => (
   <Router>
     <div>
-      <Link to="/">Home</Link>
-      <Link to="/menu">Menu</Link>
-      <Route exact path="/" component={Home} />
-      <Route path="/menu" component={Menu} />
+      <Links />
+      {/*<Switch>*/}
+        <Route exact path="/" render={() => <h1>Home</h1>} />
+        <Route
+          path="/new-:str"
+          render={({ match }) =>
+            <h1>New: {match.params.str}</h1>
+          }
+        />
+        <Route
+          path="/old-:str"
+          render={({ match }) =>
+            <Redirect to={`/new-${match.params.str}`} />
+          }
+        />
+        <Route
+          path="/protected"
+          render={() => (
+            loggedin
+            ? <h1>Welcome</h1>
+            : <Redirect to="/new-Login" />
+          )}
+        />
+        {/*<Redirect
+          from="/old"
+          to="/new"
+          />*/}
+      {/*</Switch>*/}
     </div>
   </Router>
 );
